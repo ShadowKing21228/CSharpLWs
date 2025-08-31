@@ -3,11 +3,16 @@ using Npgsql;
 
 namespace LR5;
 
-public static class DatabaseHelper
+public class DatabaseHelper
 {
-    private const string connectionString = "Host=localhost;Username=GameBaseUser;Password=123321;Database=GameBase";
-
-    public static DataTable GetTables()
+    //private const string connectionString = "Host=localhost;Username=GameBaseUser;Password=123321;Database=GameBase";
+    private readonly string connectionString;
+    private NpgsqlConnection connection;
+    public DatabaseHelper(String connectionString)
+    {
+        this.connectionString = connectionString;
+    }
+    public DataTable GetTables()
     {
         using var conn = new NpgsqlConnection(connectionString);
         conn.Open();
@@ -21,8 +26,8 @@ public static class DatabaseHelper
         table.Load(reader);
         return table;
     }
-
-    public static DataTable GetTableData(string tableName)
+    
+    public DataTable GetTableData(string tableName)
     {
         using var conn = new NpgsqlConnection(connectionString);
         conn.Open();
@@ -36,7 +41,32 @@ public static class DatabaseHelper
         adapter.Fill(dataTable);
         return dataTable;
     }
-    public static int ExecuteNonQuery(string sql)
+    
+    public Exception? ConnectToDataBase()
+    {
+        var conn = new NpgsqlConnection(connectionString);
+        
+        try {
+            conn.Open();
+            connection = conn;
+        }
+        
+        catch (Exception? e) {
+            return e;
+        }
+        return null;
+    }
+    
+    public ConnectionState GetConnectionState()
+    {
+        return connection.State;
+    }
+    
+    public void CloseDataBaseConnection()
+    {
+        connection.Close();
+    }
+    public int ExecuteNonQuery(string sql)
     {
         using var conn = new NpgsqlConnection(connectionString);
         conn.Open();
@@ -46,7 +76,7 @@ public static class DatabaseHelper
     }
 
     // 🔹 Выполнить запрос и вернуть одно значение (например, COUNT(*))
-    public static object ExecuteScalar(string sql)
+    public object ExecuteScalar(string sql)
     {
         using var conn = new NpgsqlConnection(connectionString);
         conn.Open();
@@ -54,7 +84,7 @@ public static class DatabaseHelper
         using var cmd = new NpgsqlCommand(sql, conn);
         return cmd.ExecuteScalar(); // Возвращает результат первой строки, первого столбца
     }
-    public static DataTable ExecuteQuery(string sql)
+    public DataTable ExecuteQuery(string sql)
     {
         using var conn = new NpgsqlConnection(connectionString);
         conn.Open();

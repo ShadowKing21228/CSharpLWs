@@ -89,7 +89,6 @@ namespace LR2
                 {
                     if (string.Compare(arr[j], arr[j + 1], StringComparison.OrdinalIgnoreCase) > 0)
                     {
-                        // Обмен строками
                         string temp = arr[j];
                         arr[j] = arr[j + 1];
                         arr[j + 1] = temp;

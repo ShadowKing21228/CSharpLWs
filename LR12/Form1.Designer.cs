@@ -29,6 +29,7 @@ partial class Form1
     private void InitializeComponent()
     {
         changeWindowButton = new System.Windows.Forms.Button();
+        label1 = new System.Windows.Forms.Label();
         SuspendLayout();
         // 
         // changeWindowButton
@@ -41,13 +42,26 @@ partial class Form1
         changeWindowButton.Text = "Перейти в окно настроек\r\n\r\n";
         changeWindowButton.Click += changeWindow;
         // 
+        // label1
+        // 
+        label1.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)204));
+        label1.Location = new System.Drawing.Point(163, 55);
+        label1.Name = "label1";
+        label1.Size = new System.Drawing.Size(463, 101);
+        label1.TabIndex = 1;
+        label1.Text = "Основное окно";
+        label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        // 
         // Form1
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         ClientSize = new System.Drawing.Size(800, 450);
+        Controls.Add(label1);
         Controls.Add(changeWindowButton);
         Text = "Form1";
         ResumeLayout(false);
     }
+
+    private System.Windows.Forms.Label label1;
 }

@@ -4,16 +4,18 @@ namespace LR5;
 
 public partial class Form1 : Form
 {
-    public Form1()
+    public Form1(DatabaseHelper databaseHelper)
     {
         InitializeComponent();
+        this.databaseHelper = databaseHelper;
     }
 
+    private DatabaseHelper databaseHelper;
     private void Form1_Load(object sender, EventArgs e)
     {
         try
         {
-            DataTable tables = DatabaseHelper.GetTables();
+            DataTable tables = databaseHelper.GetTables();
             foreach (DataRow row in tables.Rows)
             {
                 comboTables.Items.Add(row["table_name"].ToString());
@@ -33,7 +35,7 @@ public partial class Form1 : Form
         try
         {
             string selectedTable = comboTables.SelectedItem.ToString();
-            DataTable tableData = DatabaseHelper.GetTableData(selectedTable);
+            DataTable tableData = databaseHelper.GetTableData(selectedTable);
             dataGridView.DataSource = tableData;
         }
         catch (Exception ex)
@@ -55,12 +57,12 @@ public partial class Form1 : Form
             // Проверим, SELECT ли это
             if (sql.StartsWith("select", StringComparison.OrdinalIgnoreCase))
             {
-                var result = DatabaseHelper.ExecuteQuery(sql);
+                var result = databaseHelper.ExecuteQuery(sql);
                 dataGridView.DataSource = result;
             }
             else
             {
-                int affectedRows = DatabaseHelper.ExecuteNonQuery(sql);
+                int affectedRows = databaseHelper.ExecuteNonQuery(sql);
                 MessageBox.Show($"Запрос выполнен. Затронуто строк: {affectedRows}");
             }
         }

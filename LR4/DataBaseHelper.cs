@@ -3,11 +3,16 @@ using Npgsql;
 
 namespace LR4;
 
-public static class DatabaseHelper
+public class DatabaseHelper
 {
-    private const string connectionString = "Host=localhost;Username=GameBaseUser;Password=123321;Database=GameBase";
-
-    public static DataTable GetTables()
+    //private const string connectionString = "Host=localhost;Username=GameBaseUser;Password=123321;Database=GameBase";
+    private readonly string connectionString;
+    private NpgsqlConnection connection;
+    public DatabaseHelper(String connectionString)
+    {
+        this.connectionString = connectionString;
+    }
+    public DataTable GetTables()
     {
         using var conn = new NpgsqlConnection(connectionString);
         conn.Open();
@@ -22,18 +27,28 @@ public static class DatabaseHelper
         return table;
     }
 
-    public static DataTable GetTableData(string tableName)
+    public Exception? ConnectToDataBase()
     {
-        using var conn = new NpgsqlConnection(connectionString);
-        conn.Open();
-
-        string query = $"SELECT * FROM \"{tableName}\"";
-
-        using var cmd = new NpgsqlCommand(query, conn);
-        using var adapter = new NpgsqlDataAdapter(cmd);
-
-        var dataTable = new DataTable();
-        adapter.Fill(dataTable);
-        return dataTable;
+        var conn = new NpgsqlConnection(connectionString);
+        
+        try {
+            conn.Open();
+            connection = conn;
+        }
+        
+        catch (Exception? e) {
+            return e;
+        }
+        return null;
+    }
+    
+    public ConnectionState GetConnectionState()
+    { ;
+        return connection.State;
+    }
+    
+    public void CloseDataBaseConnection()
+    {
+        connection.Close();
     }
 }

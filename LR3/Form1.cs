@@ -16,19 +16,16 @@ public partial class Form1 : Form
             ScanDirectory(selectedPath);
         }
     }
-
-    // Рекурсивный метод для обхода директорий
+    
     private void ScanDirectory(string path)
     {
         try
         {
-            // Добавляем файлы в текущей директории
             foreach (var file in Directory.GetFiles(path))
             {
                 listBoxFiles.Items.Add(file);
             }
-
-            // Рекурсивно вызываем для каждой поддиректории
+            
             foreach (var directory in Directory.GetDirectories(path))
             {
                 ScanDirectory(directory);
